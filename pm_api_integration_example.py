@@ -77,3 +77,4 @@ class PMInternshipAPI:
 # Example usage:
 # pm_api = PMInternshipAPI(api_key="your_api_key")
 # internships = pm_api.get_internships(location="Mumbai", limit=10)
+
