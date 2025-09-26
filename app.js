@@ -775,6 +775,7 @@ class AIMatchingAlgorithm {
 class InternshipMatcher {
     constructor() {
         this.currentLanguage = 'english';
+        this.supportedLanguages = ['english', 'hindi', 'tamil', 'marathi', 'bengali'];
         this.userProfile = {};
         this.allInternships = [];
         this.filteredResults = [];
@@ -1219,6 +1220,46 @@ class InternshipMatcher {
         if (modalClose) modalClose.addEventListener('click', () => this.closeModal());
         if (modalOverlay) modalOverlay.addEventListener('click', () => this.closeModal());
         
+        // Feature card click handlers (Use AI section)
+        const featureMap = {
+            'ai-matching': {
+                title: 'AI-Powered Matching',
+                body: '<p>Our algorithm weighs your skills, location, education, and preferences to compute a personalized match score for each internship.</p>'
+            },
+            'instant-results': {
+                title: 'Instant Results',
+                body: '<p>We process thousands of listings in milliseconds and present the best matches instantly, with clear reasons for each recommendation.</p>'
+            },
+            'verified-companies': {
+                title: 'Verified Companies',
+                body: '<p>All internships are sourced from verified companies and official career pages to ensure authenticity and safety.</p>'
+            },
+            'career-growth': {
+                title: 'Career Growth',
+                body: '<p>See your profile strengths, identify gaps, and receive suggestions to improve your chances over time.</p>'
+            },
+            'community-support': {
+                title: 'Community Support',
+                body: '<p>Connect with peers and mentors to share experiences, get feedback, and learn best practices.</p>'
+            },
+            'mobile-friendly': {
+                title: 'Mobile Friendly',
+                body: '<p>Use all features on any device with a responsive layout and accessible controls.</p>'
+            }
+        };
+
+        document.querySelectorAll('[data-feature]')
+            .forEach(el => {
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', () => {
+                    const key = el.getAttribute('data-feature');
+                    const info = featureMap[key];
+                    if (info) {
+                        this.showInfoModal(info.title, info.body);
+                    }
+                });
+            });
+
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             const dropdown = document.getElementById('skills-dropdown');
@@ -1243,7 +1284,9 @@ class InternshipMatcher {
     }
 
     toggleLanguage() {
-        this.currentLanguage = this.currentLanguage === 'english' ? 'hindi' : 'english';
+        const idx = this.supportedLanguages.indexOf(this.currentLanguage);
+        const nextIdx = (idx + 1) % this.supportedLanguages.length;
+        this.currentLanguage = this.supportedLanguages[nextIdx] || 'english';
         this.updateLanguageDisplay();
     }
 
@@ -1261,13 +1304,34 @@ class InternshipMatcher {
 
     updateLanguageDisplay() {
         const langText = document.getElementById('lang-text');
-        
-        if (this.currentLanguage === 'english') {
-            if (langText) langText.textContent = 'हिंदी';
-            this.applyEnglishTranslations();
-        } else {
-            if (langText) langText.textContent = 'English';
-            this.applyHindiTranslations();
+        const langLabels = {
+            english: 'English',
+            hindi: 'हिंदी',
+            tamil: 'தமிழ்',
+            marathi: 'मराठी',
+            bengali: 'বাংলা'
+        };
+
+        if (langText) langText.textContent = langLabels[this.currentLanguage] || 'English';
+
+        switch (this.currentLanguage) {
+            case 'english':
+                this.applyEnglishTranslations();
+                break;
+            case 'hindi':
+                this.applyHindiTranslations();
+                break;
+            case 'tamil':
+                this.applyTamilTranslations();
+                break;
+            case 'marathi':
+                this.applyMarathiTranslations();
+                break;
+            case 'bengali':
+                this.applyBengaliTranslations();
+                break;
+            default:
+                this.applyEnglishTranslations();
         }
     }
 
@@ -1335,6 +1399,236 @@ class InternshipMatcher {
                 element.innerHTML = translations[key];
             }
         });
+    }
+
+    applyTamilTranslations() {
+        const translations = {
+            'app-title': 'இன்டர்ன்மேட்ச் AI',
+            'app-tagline': 'ஸ்மார்ட் இன்டெர்ன்ஷிப் மேட்சிங்',
+            'hero-badge': '<i class="fas fa-sparkles"></i><span>AI இயக்கும் மேட்சிங் எஞ்சின்</span>',
+            'hero-title': '<span class="gradient-text">AI துல்லியம்</span> உடன் உங்கள் சரியான இன்டர்ன்ஷிப் கண்டுபிடிக்க',
+            'hero-subtitle': 'எங்கள் மேம்பட்ட மேட்சிங் அல்கோரிதம் உங்கள் திறன்கள், இடம் மற்றும் விருப்பங்களை பரிசீலித்து முன்னணி நிறுவனங்களின் மிக தொடர்புடைய இன்டர்ன்ஷிப் வாய்ப்புகளுடன் இணைக்கிறது.',
+            'stat-matches': 'வெற்றிகரமான பொருத்தங்கள்',
+            'stat-companies': 'கூட்டு நிறுவனங்கள்',
+            'stat-accuracy': 'பொருத்த துல்லியம்',
+            'profile-title': 'உங்களைப் பற்றி சொல்லுங்கள்',
+            'profile-subtitle': 'தனிப்பட்ட மேட்சிங்கிற்காக உங்கள் திறன்கள் மற்றும் விருப்பங்களை எங்கள் AI புரிந்து கொள்ள உதவுங்கள்',
+            'skills-label': '<i class="fas fa-tools"></i>உங்கள் திறன்கள்',
+            'location-label': '<i class="fas fa-map-marker-alt"></i>விருப்ப இடம்',
+            'experience-label': '<i class="fas fa-user-graduate"></i>அனுபவ நிலை',
+            'find-matches': 'எனது சரியான பொருத்தத்தை கண்டுபிடிக்க',
+            'loading-title': 'AI உங்கள் ப்ரொஃபைலை பகுப்பாய்வு செய்கிறது...',
+            'loading-subtitle': 'உங்கள் திறன்களை 20,000+ வாய்ப்புகளுடன் பொருத்துகிறது',
+            'results-title': 'உங்கள் சரியான பொருத்தங்கள்',
+            'results-subtitle': 'மிகவும் தொடர்புடைய வாய்ப்புகள் கிடைத்தன',
+            'filter-location-label': 'இடம்',
+            'filter-type-label': 'நிறுவன வகை',
+            'filter-stipend-label': 'குறைந்தபட்ச ஊதியம்'
+        };
+
+        Object.keys(translations).forEach(key => {
+            const element = document.getElementById(key);
+            if (element) {
+                element.innerHTML = translations[key];
+            }
+        });
+    }
+
+    applyMarathiTranslations() {
+        const translations = {
+            'app-title': 'इंटर्नमॅच AI',
+            'app-tagline': 'स्मार्ट इंटर्नशिप मॅचिंग',
+            'hero-badge': '<i class="fas fa-sparkles"></i><span>AI-चालित मॅचिंग इंजिन</span>',
+            'hero-title': '<span class="gradient-text">AI अचूकते</span> सह तुमची परफेक्ट इंटर्नशिप शोधा',
+            'hero-subtitle': 'आमचा प्रगत मॅचिंग अल्गोरिदम तुमची कौशल्ये, स्थान आणि प्राधान्ये विश्लेषित करून सर्वोत्तम संधींशी जुळवतो.',
+            'stat-matches': 'यशस्वी जुळण्या',
+            'stat-companies': 'भागीदार कंपन्या',
+            'stat-accuracy': 'जुळणी अचूकता',
+            'profile-title': 'तुमच्याबद्दल सांगा',
+            'profile-subtitle': 'वैयक्तिकृत जुळणीसाठी आमच्या AI ला तुमची कौशल्ये आणि प्राधान्ये समजून घेण्यास मदत करा',
+            'skills-label': '<i class="fas fa-tools"></i>तुमची कौशल्ये',
+            'location-label': '<i class="fas fa-map-marker-alt"></i>प्राधान्य स्थान',
+            'experience-label': '<i class="fas fa-user-graduate"></i>अनुभव पातळी',
+            'find-matches': 'माझी परफेक्ट जुळणी शोधा',
+            'loading-title': 'AI तुमची प्रोफाइल विश्लेषित करत आहे...',
+            'loading-subtitle': 'तुमची कौशल्ये 20,000+ संधींसह जुळवत आहोत',
+            'results-title': 'तुमच्या परफेक्ट जुळण्या',
+            'results-subtitle': 'अत्यंत संबंधित संधी सापडल्या',
+            'filter-location-label': 'स्थान',
+            'filter-type-label': 'कंपनी प्रकार',
+            'filter-stipend-label': 'किमान स्टायपेंड'
+        };
+
+        Object.keys(translations).forEach(key => {
+            const element = document.getElementById(key);
+            if (element) {
+                element.innerHTML = translations[key];
+            }
+        });
+    }
+
+    applyBengaliTranslations() {
+        const translations = {
+            'app-title': 'ইন্টার্নম্যাচ AI',
+            'app-tagline': 'স্মার্ট ইন্টার্নশিপ ম্যাচিং',
+            'hero-badge': '<i class="fas fa-sparkles"></i><span>AI-চালিত ম্যাচিং ইঞ্জিন</span>',
+            'hero-title': '<span class="gradient-text">AI নির্ভুলতা</span> দিয়ে আপনার উপযুক্ত ইন্টার্নশিপ খুঁজুন',
+            'hero-subtitle': 'আমাদের উন্নত ম্যাচিং অ্যালগরিদম আপনার দক্ষতা, অবস্থান এবং পছন্দ বিশ্লেষণ করে শীর্ষ কোম্পানির সবচেয়ে প্রাসঙ্গিক সুযোগের সাথে সংযোগ করে।',
+            'stat-matches': 'সফল ম্যাচ',
+            'stat-companies': 'পার্টনার কোম্পানি',
+            'stat-accuracy': 'ম্যাচ নির্ভুলতা',
+            'profile-title': 'নিজের সম্পর্কে বলুন',
+            'profile-subtitle': 'ব্যক্তিগতকৃত ম্যাচিংয়ের জন্য আমাদের AI-কে আপনার দক্ষতা এবং পছন্দ বুঝতে সাহায্য করুন',
+            'skills-label': '<i class="fas fa-tools"></i>আপনার দক্ষতা',
+            'location-label': '<i class="fas fa-map-marker-alt"></i>পছন্দের অবস্থান',
+            'experience-label': '<i class="fas fa-user-graduate"></i>অভিজ্ঞতার স্তর',
+            'find-matches': 'আমার উপযুক্ত ম্যাচ খুঁজুন',
+            'loading-title': 'AI আপনার প্রোফাইল বিশ্লেষণ করছে...',
+            'loading-subtitle': 'আপনার দক্ষতাকে ২০,০০০+ সুযোগের সাথে মেলানো হচ্ছে',
+            'results-title': 'আপনার উপযুক্ত ম্যাচ',
+            'results-subtitle': 'অত্যন্ত প্রাসঙ্গিক সুযোগ পাওয়া গেছে',
+            'filter-location-label': 'অবস্থান',
+            'filter-type-label': 'কোম্পানির ধরন',
+            'filter-stipend-label': 'ন্যূনতম স্টাইপেন্ড'
+        };
+
+        Object.keys(translations).forEach(key => {
+            const element = document.getElementById(key);
+            if (element) {
+                element.innerHTML = translations[key];
+            }
+        });
+    }
+
+    getI18n() {
+        const dict = {
+            english: {
+                match: 'Match',
+                requiredSkills: 'Required Skills:',
+                whyPerfect: 'Why this is perfect:',
+                viewDetails: 'View Details',
+                applyNow: 'Apply Now',
+                noMatches: 'No matches found',
+                tryAdjust: 'Try adjusting your filters or skills',
+                strongSkillsMatch: (a, b) => `Strong skills match (${a}/${b} skills)`,
+                perfectLocation: 'Perfect location match',
+                topCompany: 'Top-tier company',
+                highStipend: 'High stipend',
+                jobDescription: 'Job Description',
+                requiredSkillsTitle: 'Required Skills',
+                youHave: (a, b) => `You have ${a}/${b} matching skills`,
+                companyInfo: 'Company Information',
+                type: 'Type:',
+                size: 'Size:',
+                location: 'Location:',
+                remote: 'Remote:',
+                yes: 'Yes',
+                no: 'No',
+                applyOfficial: 'Apply on Official Website',
+                redirectNote: "You will be redirected to the company's official website"
+            },
+            hindi: {
+                match: 'मैच',
+                requiredSkills: 'आवश्यक स्किल्स:',
+                whyPerfect: 'यह क्यों परफेक्ट है:',
+                viewDetails: 'विवरण देखें',
+                applyNow: 'अभी अप्लाई करें',
+                noMatches: 'कोई मैच नहीं मिला',
+                tryAdjust: 'अपने फिल्टर या स्किल को एडजस्ट करने का प्रयास करें',
+                strongSkillsMatch: (a, b) => `मजबूत स्किल मैच (${a}/${b} स्किल)`,
+                perfectLocation: 'स्थान बिल्कुल मैच करता है',
+                topCompany: 'शीर्ष कंपनी',
+                highStipend: 'उच्च वेतन',
+                jobDescription: 'नौकरी विवरण',
+                requiredSkillsTitle: 'आवश्यक स्किल्स',
+                youHave: (a, b) => `आपके पास ${a}/${b} स्किल्स मैच हैं`,
+                companyInfo: 'कंपनी जानकारी',
+                type: 'प्रकार:',
+                size: 'आकार:',
+                location: 'स्थान:',
+                remote: 'रिमोट:',
+                yes: 'हाँ',
+                no: 'नहीं',
+                applyOfficial: 'आधिकारिक साइट पर अप्लाई करें',
+                redirectNote: 'आपको कंपनी की आधिकारिक वेबसाइट पर रीडायरेक्ट किया जाएगा'
+            },
+            tamil: {
+                match: 'பொருத்தம்',
+                requiredSkills: 'தேவையான திறன்கள்:',
+                whyPerfect: 'ஏன் இது சரியானது:',
+                viewDetails: 'விவரங்களை பார்க்க',
+                applyNow: 'இப்போது விண்ணப்பிக்க',
+                noMatches: 'பொருந்தல்கள் இல்லை',
+                tryAdjust: 'உங்கள் வடிகட்டிகள் அல்லது திறன்களை மாற்றி முயற்சிக்கவும்',
+                strongSkillsMatch: (a, b) => `வலுவான திறன் பொருத்தம் (${a}/${b})`,
+                perfectLocation: 'சரியான இட பொருத்தம்',
+                topCompany: 'முன்னணி நிறுவனம்',
+                highStipend: 'உயர் ஊதியம்',
+                jobDescription: 'வேலை விவரம்',
+                requiredSkillsTitle: 'தேவையான திறன்கள்',
+                youHave: (a, b) => `உங்களிடம் ${a}/${b} திறன்கள் பொருந்துகின்றன`,
+                companyInfo: 'நிறுவன தகவல்',
+                type: 'வகை:',
+                size: 'அளவு:',
+                location: 'இடம்:',
+                remote: 'ரிமோட்:',
+                yes: 'ஆம்',
+                no: 'இல்லை',
+                applyOfficial: 'அதிகாரப்பூர்வ தளத்தில் விண்ணப்பிக்க',
+                redirectNote: 'நீங்கள் நிறுவனத்தின் அதிகாரப்பூர்வ தளத்திற்குக் கொண்டுசெல்லப்படுவீர்கள்'
+            },
+            marathi: {
+                match: 'जुळणी',
+                requiredSkills: 'आवश्यक कौशल्ये:',
+                whyPerfect: 'हे परफेक्ट का आहे:',
+                viewDetails: 'तपशील पाहा',
+                applyNow: 'आता अर्ज करा',
+                noMatches: 'जुळण्या आढळल्या नाहीत',
+                tryAdjust: 'फिल्टर्स किंवा कौशल्ये समायोजित करून पहा',
+                strongSkillsMatch: (a, b) => `मजबूत कौशल्य जुळणी (${a}/${b})`,
+                perfectLocation: 'संपूर्ण स्थान जुळणी',
+                topCompany: 'शीर्ष दर्जाची कंपनी',
+                highStipend: 'उच्च स्टायपेंड',
+                jobDescription: 'नोकरीचे वर्णन',
+                requiredSkillsTitle: 'आवश्यक कौशल्ये',
+                youHave: (a, b) => `तुमच्याकडे ${a}/${b} जुळणारी कौशल्ये आहेत`,
+                companyInfo: 'कंपनी माहिती',
+                type: 'प्रकार:',
+                size: 'आकार:',
+                location: 'स्थान:',
+                remote: 'रिमोट:',
+                yes: 'होय',
+                no: 'नाही',
+                applyOfficial: 'अधिकृत वेबसाइटवर अर्ज करा',
+                redirectNote: 'आपण कंपनीच्या अधिकृत वेबसाइटवर पुनर्निर्देशित केले जाल'
+            },
+            bengali: {
+                match: 'ম্যাচ',
+                requiredSkills: 'প্রয়োজনীয় দক্ষতা:',
+                whyPerfect: 'এটি কেন উপযুক্ত:',
+                viewDetails: 'বিস্তারিত দেখুন',
+                applyNow: 'এখনই আবেদন করুন',
+                noMatches: 'কোনও মিল পাওয়া যায়নি',
+                tryAdjust: 'ফিল্টার বা দক্ষতা সমন্বয় করে দেখুন',
+                strongSkillsMatch: (a, b) => `শক্তিশালী দক্ষতা মিল (${a}/${b})`,
+                perfectLocation: 'সম্পূর্ণ লোকেশন মিল',
+                topCompany: 'শীর্ষস্থানীয় কোম্পানি',
+                highStipend: 'উচ্চ স্টাইপেন্ড',
+                jobDescription: 'চাকরির বিবরণ',
+                requiredSkillsTitle: 'প্রয়োজনীয় দক্ষতা',
+                youHave: (a, b) => `আপনার ${a}/${b} টি দক্ষতা মিলে গেছে`,
+                companyInfo: 'কোম্পানির তথ্য',
+                type: 'ধরন:',
+                size: 'আকার:',
+                location: 'অবস্থান:',
+                remote: 'রিমোট:',
+                yes: 'হ্যাঁ',
+                no: 'না',
+                applyOfficial: 'অফিশিয়াল ওয়েবসাইটে আবেদন করুন',
+                redirectNote: 'আপনাকে কোম্পানির অফিসিয়াল ওয়েবসাইটে রিডাইরেক্ট করা হবে'
+            }
+        };
+        return dict[this.currentLanguage] || dict.english;
     }
 
     handleSkillsInput(e) {
@@ -1563,6 +1857,7 @@ class InternshipMatcher {
         let totalScore = 0;
         let matchedSkills = [];
         let reasons = [];
+        const i18n = this.getI18n();
 
         // Skills matching (60% weight)
         const skillsMatch = this.calculateSkillsMatch(internship.required_skills, profile.skills);
@@ -1570,9 +1865,7 @@ class InternshipMatcher {
         totalScore += skillsMatch.score * 0.6;
         
         if (skillsMatch.score > 0.7) {
-            reasons.push(this.currentLanguage === 'english' 
-                ? `Strong skills match (${matchedSkills.length}/${internship.required_skills.length} skills)` 
-                : `मजबूत स्किल मैच (${matchedSkills.length}/${internship.required_skills.length} स्किल)`);
+            reasons.push(i18n.strongSkillsMatch(matchedSkills.length, internship.required_skills.length));
         }
 
         // Location preference (25% weight)
@@ -1581,9 +1874,7 @@ class InternshipMatcher {
             locationScore = 0.8; // no preference is flexible
         } else if (internship.location === profile.location || internship.remote) {
             locationScore = 1.0;
-            reasons.push(this.currentLanguage === 'english' 
-                ? 'Perfect location match' 
-                : 'स्थान बिल्कुल मैच करता है');
+            reasons.push(i18n.perfectLocation);
         }
         totalScore += locationScore * 0.25;
 
@@ -1594,17 +1885,13 @@ class InternshipMatcher {
         // Company popularity bonus
         if (['Google', 'Microsoft', 'Netflix', 'Coinbase'].includes(internship.company)) {
             totalScore += 0.05;
-            reasons.push(this.currentLanguage === 'english' 
-                ? 'Top-tier company' 
-                : 'शीर्ष कंपनी');
+            reasons.push(i18n.topCompany);
         }
 
         // High stipend bonus
         const stipendValue = this.extractStipendValue(internship.stipend);
         if (stipendValue > 40000) {
-            reasons.push(this.currentLanguage === 'english' 
-                ? 'High stipend' 
-                : 'उच्च वेतन');
+            reasons.push(i18n.highStipend);
         }
 
         return {
@@ -1717,12 +2004,13 @@ class InternshipMatcher {
         }
 
         if (!jobs || jobs.length === 0) {
+            const i18n = this.getI18n();
             console.log('No jobs to display, showing no matches message'); // Debug log
             jobResults.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--color-text-secondary);">
                     <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                    <h3>${this.currentLanguage === 'english' ? 'No matches found' : 'कोई मैच नहीं मिला'}</h3>
-                    <p>${this.currentLanguage === 'english' ? 'Try adjusting your filters or skills' : 'अपने फिल्टर या स्किल को एडजस्ट करने का प्रयास करें'}</p>
+                    <h3>${i18n.noMatches}</h3>
+                    <p>${i18n.tryAdjust}</p>
                 </div>
             `;
             return;
@@ -1761,7 +2049,7 @@ class InternshipMatcher {
     }
 
     createJobCard(job) {
-        const isHindi = this.currentLanguage === 'hindi';
+        const i18n = this.getI18n();
         
         return `
             <div class="job-card" data-job-id="${job.id}">
@@ -1775,7 +2063,7 @@ class InternshipMatcher {
                     </div>
                     <div class="match-score">
                         <i class="fas fa-star"></i>
-                        ${job.matchPercentage || job.matchScore || 0}% ${isHindi ? 'मैच' : 'Match'}
+                        ${job.matchPercentage || job.matchScore || 0}% ${i18n.match}
                     </div>
                 </div>
                 
@@ -1803,7 +2091,7 @@ class InternshipMatcher {
                 </div>
                 
                 <div class="job-skills">
-                    <div class="skills-label">${isHindi ? 'आवश्यक स्किल्स:' : 'Required Skills:'}</div>
+                    <div class="skills-label">${i18n.requiredSkills}</div>
                     <div class="skills-list">
                         ${job.required_skills.slice(0, 6).map(skill => `
                             <span class="skill-chip ${this.isSkillMatched(skill, job) ? 'matched' : ''}">${skill}</span>
@@ -1814,7 +2102,7 @@ class InternshipMatcher {
                 
                 ${job.matchReasons && job.matchReasons.length > 0 ? `
                     <div class="match-reasons">
-                        <div class="skills-label">${isHindi ? 'यह क्यों परफेक्ट है:' : 'Why this is perfect:'}</div>
+                        <div class="skills-label">${i18n.whyPerfect}</div>
                         <div class="reasons-list">
                             ${job.matchReasons.map(reason => `<span class="reason-tag"><i class="fas fa-check"></i> ${reason}</span>`).join('')}
                         </div>
@@ -1824,11 +2112,11 @@ class InternshipMatcher {
                 <div class="job-actions">
                     <button class="details-btn">
                         <i class="fas fa-info-circle"></i>
-                        ${isHindi ? 'विवरण देखें' : 'View Details'}
+                        ${i18n.viewDetails}
                     </button>
                     <button class="apply-btn">
                         <i class="fas fa-external-link-alt"></i>
-                        ${isHindi ? 'अभी अप्लाई करें' : 'Apply Now'}
+                        ${i18n.applyNow}
                     </button>
                 </div>
             </div>
@@ -1902,7 +2190,7 @@ class InternshipMatcher {
         
         modalTitle.textContent = job.title;
         
-        const isHindi = this.currentLanguage === 'hindi';
+        const i18n = this.getI18n();
         
         modalBody.innerHTML = `
             <div class="modal-job-info">
@@ -1930,18 +2218,18 @@ class InternshipMatcher {
                 <div class="match-score-large">
                     <div class="score-circle">
                         <span class="score-number">${job.matchScore}%</span>
-                        <span class="score-label">${isHindi ? 'मैच' : 'Match'}</span>
+                        <span class="score-label">${i18n.match}</span>
                     </div>
                 </div>
             </div>
             
             <div class="modal-section">
-                <h5>${isHindi ? 'नौकरी विवरण' : 'Job Description'}</h5>
+                <h5>${i18n.jobDescription}</h5>
                 <p>${job.description}</p>
             </div>
             
             <div class="modal-section">
-                <h5>${isHindi ? 'आवश्यक स्किल्स' : 'Required Skills'}</h5>
+                <h5>${i18n.requiredSkillsTitle}</h5>
                 <div class="skills-list">
                     ${job.required_skills.map(skill => `
                         <span class="skill-chip ${job.matchedSkills.includes(skill) ? 'matched' : ''}">${skill}</span>
@@ -1949,13 +2237,13 @@ class InternshipMatcher {
                 </div>
                 <p style="margin-top: 1rem; color: var(--color-text-secondary); font-size: 0.9rem;">
                     <i class="fas fa-check-circle" style="color: var(--color-success);"></i>
-                    ${isHindi ? 'आपके पास' : 'You have'} ${job.matchedSkills.length}/${job.required_skills.length} ${isHindi ? 'स्किल्स मैच हैं' : 'matching skills'}
+                    ${i18n.youHave(job.matchedSkills.length, job.required_skills.length)}
                 </p>
             </div>
             
             ${job.matchReasons.length > 0 ? `
                 <div class="modal-section">
-                    <h5>${isHindi ? 'यह इंटर्नशिप आपके लिए क्यों परफेक्ट है' : 'Why This Internship is Perfect for You'}</h5>
+                    <h5>${i18n.whyPerfect}</h5>
                     <div class="reasons-list">
                         ${job.matchReasons.map(reason => `
                             <div class="reason-item">
@@ -1968,19 +2256,19 @@ class InternshipMatcher {
             ` : ''}
             
             <div class="modal-section">
-                <h5>${isHindi ? 'कंपनी जानकारी' : 'Company Information'}</h5>
+                <h5>${i18n.companyInfo}</h5>
                 <div class="company-info-grid">
                     <div>
-                        <strong>${isHindi ? 'प्रकार:' : 'Type:'}</strong> ${job.type}
+                        <strong>${i18n.type}</strong> ${job.type}
                     </div>
                     <div>
-                        <strong>${isHindi ? 'आकार:' : 'Size:'}</strong> ${job.company_size}
+                        <strong>${i18n.size}</strong> ${job.company_size}
                     </div>
                     <div>
-                        <strong>${isHindi ? 'स्थान:' : 'Location:'}</strong> ${job.location}
+                        <strong>${i18n.location}</strong> ${job.location}
                     </div>
                     <div>
-                        <strong>${isHindi ? 'रिमोट:' : 'Remote:'}</strong> ${job.remote ? (isHindi ? 'हाँ' : 'Yes') : (isHindi ? 'नहीं' : 'No')}
+                        <strong>${i18n.remote}</strong> ${job.remote ? i18n.yes : i18n.no}
                     </div>
                 </div>
             </div>
@@ -1988,10 +2276,10 @@ class InternshipMatcher {
             <div class="modal-actions">
                 <button class="btn btn--primary btn--full-width" onclick="window.open('${job.apply_link}', '_blank')">
                     <i class="fas fa-external-link-alt"></i>
-                    ${isHindi ? 'आधिकारिक साइट पर अप्लाई करें' : 'Apply on Official Website'}
+                    ${i18n.applyOfficial}
                 </button>
                 <p style="text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary);">
-                    ${isHindi ? 'आपको कंपनी की आधिकारिक वेबसाइट पर रीडायरेक्ट किया जाएगा' : 'You will be redirected to the company\'s official website'}
+                    ${i18n.redirectNote}
                 </p>
             </div>
         `;
@@ -2006,6 +2294,18 @@ class InternshipMatcher {
             modal.classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
+    }
+
+    // Reuse the existing job modal for feature info
+    showInfoModal(title, htmlBody) {
+        const modal = document.getElementById('job-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        if (!modal || !modalTitle || !modalBody) return;
+        modalTitle.textContent = title;
+        modalBody.innerHTML = `<div class="modal-section">${htmlBody}</div>`;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
 
     showProfileSection() {
